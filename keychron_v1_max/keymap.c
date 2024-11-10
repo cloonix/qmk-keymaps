@@ -26,87 +26,66 @@ enum layers {
   WIN02, // 5
 };
 
-// Tap Dance declarations
-// enum {
-//     TD_KC_GRV = 0,
-// };
-
-// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
 [MAC01] = LAYOUT_iso_83(
- KC_ESC,     KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
- QK_LEAD,    KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           KC_PGUP,
- KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
- MO(MAC02),  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
- KC_LSFT,    KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
- KC_LCTL,    KC_LOPTN, KC_LCMMD,                               KC_SPC,                                 KC_RCMMD, MO(MACFN),  KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT),
+KC_ESC,     KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
+QK_LEAD,    KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           KC_PGUP,
+KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
+MO(MAC02),  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
+KC_LSFT,    KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
+KC_LCTL,    KC_LOPTN, KC_LCMMD,                               KC_SPC,                                 KC_RCMMD, MO(MACFN),  KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
+),
 
 [MACFN] = LAYOUT_iso_83(
- _______,  KC_BRID,  KC_BRIU,  KC_MCTRL, KC_LNPAD, RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
- _______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
- RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
- _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            KC_END,
- _______,  _______,  _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
- _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______),
+_______,  KC_BRID,  KC_BRIU,  KC_MCTRL, KC_LNPAD, RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
+_______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
+_______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
+_______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
+),
 
 [MAC02] = LAYOUT_iso_83(
- _______,  _______,        _______,       _______,       _______,         _______,     _______,  _______,  _______,  _______,    _______,  _______,  _______,  _______,                    _______,
- _______,  LCAG(KC_1),     LCAG(KC_2),    LCAG(KC_3),     LCAG(KC_4),     LCAG(KC_5),     _______,  _______,  _______,  _______,    _______,  _______,  _______,  QK_BOOT,                    _______,
- _______,  LCAG(KC_Q),     LCTL(KC_UP),   LCAG(KC_E),     _______,        LCAG(KC_T),  _______,  _______,  _______,  _______,    _______,  _______,  _______,                              _______,
- _______,  LCTL(KC_LEFT),  LCTL(KC_DOWN), LCTL(KC_RIGHT), LCAG(KC_F),     _______,     _______,  _______,  _______,  LCAG(KC_L), _______,  _______,  _______,  _______,                    _______,
- _______,  _______,        LCAG(KC_LEFT), LCA(KC_ENT),    LCAG(KC_RIGHT), LCAG(KC_V),  _______,  _______,  _______,  _______,    _______,  _______,            _______,      LCA(KC_UP),
- _______,  _______,        _______,                                                    _______,                                  _______,  _______,  _______,  LCA(KC_LEFT), LCA(KC_DOWN), LCA(KC_RIGHT)
- ),
+_______,  _______,        _______,       _______,       _______,         _______,     _______,  _______,  _______,  _______,    _______,  _______,  _______,  _______,                    _______,
+_______,  LCAG(KC_1),     LCAG(KC_2),    LCAG(KC_3),     LCAG(KC_4),     LCAG(KC_5),  _______,  _______,  _______,  _______,    _______,  _______,  _______,  QK_BOOT,                    _______,
+_______,  LCAG(KC_Q),     LCTL(KC_UP),   LCAG(KC_E),     _______,        LCAG(KC_T),  _______,  _______,  _______,  _______,    _______,  _______,  _______,                              _______,
+_______,  LCTL(KC_LEFT),  LCTL(KC_DOWN), LCTL(KC_RIGHT), LCAG(KC_F),     _______,     _______,  _______,  _______,  LCAG(KC_L), _______,  _______,  _______,  _______,                    _______,
+_______,  _______,        LCAG(KC_LEFT), LCA(KC_ENT),    LCAG(KC_RIGHT), LCAG(KC_V),  _______,  _______,  _______,  _______,    _______,  _______,            _______,      LCA(KC_UP),
+_______,  _______,        _______,                                                    _______,                                  _______,  _______,  _______,  LCA(KC_LEFT), LCA(KC_DOWN), LCA(KC_RIGHT)
+),
 
 [WIN01] = LAYOUT_iso_83(
- KC_ESC,      KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,    KC_F12,   KC_DEL,             KC_MUTE,
- QK_LEAD,     KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_EQL,   KC_BSPC,            KC_PGUP,
- KC_TAB,      KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,                      KC_PGDN,
- MO(WIN02),   KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_NUHS,  KC_ENT,             KC_HOME,
- KC_LSFT,     KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,             KC_RSFT,  KC_UP,
- KC_LCTL,     KC_LGUI,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(WINFN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT),
+KC_ESC,      KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,    KC_F12,   KC_DEL,             KC_MUTE,
+QK_LEAD,     KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_EQL,   KC_BSPC,            KC_PGUP,
+KC_TAB,      KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,                      KC_PGDN,
+MO(WIN02),   KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_NUHS,  KC_ENT,             KC_HOME,
+KC_LSFT,     KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,             KC_RSFT,  KC_UP,
+KC_LCTL,     KC_LGUI,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(WINFN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT
+),
 
 [WINFN] = LAYOUT_iso_83(
- _______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
- _______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
- RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
- _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            KC_END,
- _______,  _______,  _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
- _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______),
+_______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
+_______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
+_______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            KC_END,
+_______,  _______,  _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
+_______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
+),
 
 [WIN02] = LAYOUT_iso_83(
- _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
- _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  QK_BOOT,            _______,
- _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
- _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
- _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,  _______,
- _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______),
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  QK_BOOT,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,  _______,
+_______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
+),
 };
-
-// clang-format on
-#if defined(ENCODER_MAP_ENABLE)
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [MAC01] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
-    [MACFN] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
-    [MAC02] = {ENCODER_CCW_CW(KC_BRID, KC_BRIU)},
-    [WIN01] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
-    [WINFN] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
-    [WIN02] = {ENCODER_CCW_CW(KC_BRID, KC_BRIU)},
-};
-#endif // ENCODER_MAP_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!process_record_keychron_common(keycode, record)) {
-        return false;
-    }
     return true;
 }
-
-// Tap Dance definitions
-// tap_dance_action_t tap_dance_actions[] = {
-//     // Tap once for Escape, twice for Caps Lock
-//     [TD_KC_GRV] = ACTION_TAP_DANCE_LAYER_TOGGLE(QK_LEAD, WIN_01),
-// };
 
 void leader_start_user(void) {
     // Do something when the leader key is pressed
@@ -133,17 +112,73 @@ void leader_end_user(void) {
 
 // RGB modifications
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-  for (uint8_t i = led_min; i < led_max; i++) {
-    switch(get_highest_layer(layer_state|default_layer_state)) {
-      case 2: // WIN01
-        rgb_matrix_set_color(i, RGB_BLUE);
-        break;
-      case 1: // MACFN
-        rgb_matrix_set_color(i, RGB_GREEN);
-        break;
-      default: // MAC01
-        break;
+  if (get_highest_layer(layer_state) > 0) {
+    uint8_t layer = get_highest_layer(layer_state|default_layer_state);
+    for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+      for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+        uint8_t i = g_led_config.matrix_co[row][col];
+
+        // Set the color of the key with i == 0 based on the layer value
+        if (i == 0) {
+          switch (layer) {
+            case 0:
+              rgb_matrix_set_color(i, RGB_WHITE);
+              break;
+            case 1:
+              rgb_matrix_set_color(i, RGB_BLUE);
+              break;
+            case 2:
+              rgb_matrix_set_color(i, RGB_ORANGE);
+              break;
+            case 3:
+              rgb_matrix_set_color(i, RGB_BLUE);
+              break;
+            case 4:
+              rgb_matrix_set_color(i, RGB_GREEN);
+              break;
+            case 5:
+              rgb_matrix_set_color(i, RGB_GREEN);
+              break;
+            default:
+              rgb_matrix_set_color(i, RGB_WHITE);
+              break;
+          }
+        } else {
+          switch(layer) {
+            case 1: 
+            case 3: 
+            case 4: 
+            case 5: 
+            case 6: 
+            case 7: 
+              if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+                  rgb_matrix_set_color(i, RGB_PURPLE);
+              } else {
+                  rgb_matrix_set_color(i, RGB_OFF);
+              }
+              break;
+            case 2:
+            default: // WIN01
+              break;
+          }
+        }
       }
     }
+  } else {
+    // Ensure the key 'i' is set to white when in the default layer state
+    rgb_matrix_set_color(0, RGB_WHITE);
+  }
   return false;
 }
+
+// clang-format on
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [MAC01] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [MACFN] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+    [MAC02] = {ENCODER_CCW_CW(KC_BRID, KC_BRIU)},
+    [WIN01] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [WINFN] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+    [WIN02] = {ENCODER_CCW_CW(KC_BRID, KC_BRIU)},
+};
+#endif // ENCODER_MAP_ENABLE
