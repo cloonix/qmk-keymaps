@@ -1,8 +1,8 @@
-#define TAPPING_TERM 200
-#define ONESHOT_TIMEOUT 2500
+// #define TAPPING_TERM 200
+// #define ONESHOT_TIMEOUT 2500
 // #define LEADER_NO_TIMEOUT
-#define LEADER_TIMEOUT 250
-#define LEADER_PER_KEY_TIMING
+// #define LEADER_TIMEOUT 250
+// #define LEADER_PER_KEY_TIMING
 
 // disable all RGB effects (except solid color)
 #undef ENABLE_RGB_MATRIX_ALPHAS_MODS

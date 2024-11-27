@@ -1,81 +1,84 @@
-/* Copyright 2023 @ Keychron (https://www.keychron.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include QMK_KEYBOARD_H
 #include "keychron_common.h"
 
-enum layers {
-  MAC01, // 0 - DIP switch left
-  MACFN, // 1
-  WIN01, // 2 - DIP switch right
-  WINFN, // 3
-  MAC02, // 4
-  WIN02, // 5
+enum layers{
+  MAC_BASE, // 0 - DIP switch left
+  MAC_FN, // 1
+  WIN_BASE, // 2 - DIP switch right
+  WIN_FN, // 3
+  MAC_FN2, // 4
+  WIN_FN2 // 5
 };
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+enum td_keycodes {
+  PRINT
+};
 
-[MAC01] = LAYOUT_iso_83(
-KC_ESC,     KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
-QK_LEAD,    KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           KC_PGUP,
-KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
-MO(MAC02),  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
-KC_LSFT,    KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
-KC_LCTL,    KC_LOPTN, KC_LCMMD,                               KC_SPC,                                 KC_RCMMD, MO(MACFN),  KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
+typedef enum {
+  TD_UNKNOWN,
+  TD_SINGLE_TAP,
+  TD_SINGLE_HOLD,
+  TD_DOUBLE_TAP
+} td_state_t;
+
+static td_state_t td_state;
+
+// Function to determine the current tapdance state
+td_state_t cur_dance(tap_dance_state_t *state);
+
+// `finished` and `reset` functions for each tapdance keycode
+void print_finished(tap_dance_state_t *state, void *user_data);
+void print_reset(tap_dance_state_t *state, void *user_data);
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+[MAC_BASE] = LAYOUT_iso_83(
+KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
+QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           KC_PGUP,
+KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
+LCAG_T(KC_CAPS), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
+KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
+KC_LCTL,         KC_LOPTN, KC_LCMMD,                               KC_SPC,                                 KC_RCMMD, MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
 ),
 
-[MACFN] = LAYOUT_iso_83(
+[MAC_FN] = LAYOUT_iso_83(
 _______,  KC_BRID,  KC_BRIU,  KC_MCTRL, KC_LNPAD, RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
-_______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  QK_BOOT,            _______,
 RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
 _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
 _______,  _______,  _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
 _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
 ),
 
-[MAC02] = LAYOUT_iso_83(
-_______,  _______,        _______,       _______,       _______,         _______,     _______,  _______,  _______,  _______,    _______,  _______,  _______,  _______,                    _______,
-_______,  LCAG(KC_1),     LCAG(KC_2),    LCAG(KC_3),     LCAG(KC_4),     LCAG(KC_5),  _______,  _______,  _______,  _______,    _______,  _______,  _______,  QK_BOOT,                    _______,
-_______,  LCAG(KC_Q),     LCTL(KC_UP),   LCAG(KC_E),     _______,        LCAG(KC_T),  _______,  _______,  _______,  _______,    _______,  _______,  _______,                              _______,
-_______,  LCTL(KC_LEFT),  LCTL(KC_DOWN), LCTL(KC_RIGHT), LCAG(KC_F),     _______,     _______,  _______,  _______,  LCAG(KC_L), _______,  _______,  _______,  _______,                    _______,
-_______,  _______,        LCAG(KC_LEFT), LCA(KC_ENT),    LCAG(KC_RIGHT), LCAG(KC_V),  _______,  _______,  _______,  _______,    _______,  _______,            _______,      LCA(KC_UP),
-_______,  _______,        _______,                                                    _______,                                  _______,  _______,  _______,  LCA(KC_LEFT), LCA(KC_DOWN), LCA(KC_RIGHT)
+[WIN_BASE] = LAYOUT_iso_83(
+KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,    KC_F12,   KC_DEL,             KC_MUTE,
+QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_EQL,   KC_BSPC,            KC_PGUP,
+KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,                      KC_PGDN,
+LCAG_T(KC_CAPS), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_NUHS,  KC_ENT,             KC_HOME,
+KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,             KC_RSFT,  KC_UP,
+KC_LCTL,         KC_LGUI,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(WIN_FN), KC_RCTL, KC_LEFT,  KC_DOWN,  KC_RGHT
 ),
 
-[WIN01] = LAYOUT_iso_83(
-KC_ESC,      KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,    KC_F12,   KC_DEL,             KC_MUTE,
-QK_LEAD,     KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_EQL,   KC_BSPC,            KC_PGUP,
-KC_TAB,      KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,                      KC_PGDN,
-MO(WIN02),   KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_NUHS,  KC_ENT,             KC_HOME,
-KC_LSFT,     KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,             KC_RSFT,  KC_UP,
-KC_LCTL,     KC_LGUI,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(WINFN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT
-),
-
-[WINFN] = LAYOUT_iso_83(
+[WIN_FN] = LAYOUT_iso_83(
 _______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
-_______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  QK_BOOT,            _______,
 RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
 _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            KC_END,
 _______,  _______,  _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
 _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
 ),
 
-[WIN02] = LAYOUT_iso_83(
+[MAC_FN2] = LAYOUT_iso_83(
 _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
-_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  QK_BOOT,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,  _______,
+_______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
+),
+
+[WIN_FN2] = LAYOUT_iso_83(
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+_______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
 _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
 _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
 _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,  _______,
@@ -83,8 +86,80 @@ _______,  _______,  _______,                                _______,            
 ),
 };
 
+// clang-format on
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [MAC_BASE] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [MAC_FN]   = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+    [WIN_BASE] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [WIN_FN]   = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+    [MAC_FN2]   = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+    [WIN_FN2]   = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+};
+#endif // ENCODER_MAP_ENABLE
+
+// Determine the tapdance state to return
+td_state_t cur_dance(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+        else return TD_SINGLE_HOLD;
+    }
+
+    if (state->count == 2) return TD_DOUBLE_TAP;
+    else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
+}
+
+// Handle the possible states for each tapdance keycode you define:
+
+void print_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            register_code16(KC_PSCR);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LALT));
+            register_code16(KC_PSCR);
+            break;
+        case TD_DOUBLE_TAP: 
+            register_mods(MOD_BIT(KC_LCTL));
+            register_code16(KC_PSCR);
+            break;
+        default:
+            break;
+    }
+}
+
+void print_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            unregister_code16(KC_PSCR);
+            break;
+        case TD_SINGLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LALT)); 
+            unregister_code16(KC_PSCR);
+            break;
+        case TD_DOUBLE_TAP:
+            unregister_mods(MOD_BIT(KC_LCTL));
+            unregister_code16(KC_PSCR);
+            break;
+        default:
+            break;
+    }
+}
+
+// Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
+tap_dance_action_t tap_dance_actions[] = {
+    [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset)
+};
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    return true;
+  // this seems to be very important
+  // strange behavior with KC_LOPTN and KC_LCMMD
+  if (!process_record_keychron_common(keycode, record)) {
+    return false;
+  }
+  return true;
 }
 
 void leader_start_user(void) {
@@ -96,12 +171,12 @@ void leader_end_user(void) {
   bool did_leader_succeed = false;
 
   if (leader_sequence_one_key(KC_1)) {
-    layer_move(MAC01);
+    layer_move(MAC_BASE);
     did_leader_succeed = true;
   }
   
   if (leader_sequence_one_key(KC_2)) {
-    layer_move(WIN01);
+    layer_move(WIN_BASE);
     did_leader_succeed = true;
   }
   
@@ -112,7 +187,7 @@ void leader_end_user(void) {
 
 // RGB modifications
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-  if (get_highest_layer(layer_state) > 0) {
+  if (get_highest_layer(layer_state) >= 0) {
     uint8_t layer = get_highest_layer(layer_state|default_layer_state);
     for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
       for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
@@ -142,43 +217,28 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             default:
               rgb_matrix_set_color(i, RGB_WHITE);
               break;
-          }
-        } else {
-          switch(layer) {
-            case 1: 
-            case 3: 
-            case 4: 
-            case 5: 
-            case 6: 
-            case 7: 
-              if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-                  rgb_matrix_set_color(i, RGB_PURPLE);
-              } else {
-                  rgb_matrix_set_color(i, RGB_OFF);
-              }
-              break;
-            case 2:
-            default: // WIN01
-              break;
-          }
-        }
+           }
+        //  } else {
+        //   switch(layer) {
+        //     case 1: 
+        //     case 3: 
+        //     case 4: 
+        //     case 5: 
+        //     case 6: 
+        //     case 7: 
+        //       if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+        //           rgb_matrix_set_color(i, RGB_PURPLE);
+        //       } else {
+        //           rgb_matrix_set_color(i, RGB_OFF);
+        //       }
+        //       break;
+        //     case 2:
+        //     default: // WIN01
+        //       break;
+        //   }
+        } 
       }
     }
-  } else {
-    // Ensure the key 'i' is set to white when in the default layer state
-    rgb_matrix_set_color(0, RGB_WHITE);
   }
   return false;
 }
-
-// clang-format on
-#if defined(ENCODER_MAP_ENABLE)
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [MAC01] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
-    [MACFN] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
-    [MAC02] = {ENCODER_CCW_CW(KC_BRID, KC_BRIU)},
-    [WIN01] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
-    [WINFN] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
-    [WIN02] = {ENCODER_CCW_CW(KC_BRID, KC_BRIU)},
-};
-#endif // ENCODER_MAP_ENABLE
