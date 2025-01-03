@@ -10,7 +10,8 @@ enum layers{
 };
 
 enum td_keycodes {
-  PRINT
+  PRINT,
+  SPACE
 };
 
 typedef enum {
@@ -36,7 +37,7 @@ QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_
 KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  KC_RBRC,              KC_DEL,     KC_END,   KC_PGDN,
 LCAG_T(KC_CAPS), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,  KC_NUHS,    KC_ENT,
 KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,              KC_UP,
-KC_LCTL,         KC_LOPTN, KC_LCMMD,                               KC_SPC,                                 KC_RCMMD, KC_ROPTN, MO(MAC_FN), KC_RCTL,  KC_LEFT,    KC_DOWN,  KC_RGHT
+KC_LCTL,         KC_LOPTN, KC_LCMD,                                TD(SPACE),                              KC_RCMD,  KC_ROPTN, MO(MAC_FN), KC_RCTL,  KC_LEFT,    KC_DOWN,  KC_RGHT
 ),
 
 [MAC_FN] = LAYOUT_tkl_iso(
@@ -97,16 +98,13 @@ td_state_t cur_dance(tap_dance_state_t *state) {
     else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
 }
 
-// Handle the possible states for each tapdance keycode you define:
+// Tap dances
+// Print Screen
 
 void print_finished(tap_dance_state_t *state, void *user_data) {
     td_state = cur_dance(state);
     switch (td_state) {
         case TD_SINGLE_TAP:
-            register_code16(KC_PSCR);
-            break;
-        case TD_SINGLE_HOLD:
-            register_mods(MOD_BIT(KC_LALT));
             register_code16(KC_PSCR);
             break;
         case TD_DOUBLE_TAP: 
@@ -123,10 +121,6 @@ void print_reset(tap_dance_state_t *state, void *user_data) {
         case TD_SINGLE_TAP:
             unregister_code16(KC_PSCR);
             break;
-        case TD_SINGLE_HOLD:
-            unregister_mods(MOD_BIT(KC_LALT)); 
-            unregister_code16(KC_PSCR);
-            break;
         case TD_DOUBLE_TAP:
             unregister_mods(MOD_BIT(KC_LCTL));
             unregister_code16(KC_PSCR);
@@ -136,9 +130,39 @@ void print_reset(tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void space_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            register_code16(KC_SPC);
+            break;
+        case TD_SINGLE_HOLD: 
+            register_mods(MOD_BIT(KC_LCMD));
+            register_code16(KC_SPC);
+            break;
+        default:
+            break;
+    }
+}
+
+void space_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            unregister_code16(KC_SPC);
+            break;
+        case TD_SINGLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LCMD));
+            unregister_code16(KC_SPC);
+            break;
+        default:
+            break;
+    }
+}
+
 // Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
 tap_dance_action_t tap_dance_actions[] = {
-    [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset)
+    [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset),
+    [SPACE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, space_finished, space_reset)
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -180,7 +204,8 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         if (i == 0) {
           switch (layer) {
             case 0:
-              rgb_matrix_set_color(i, RGB_WHITE);
+            default:
+              rgb_matrix_set_color(i, RGB_GREEN);
               break;
             case 1:
               rgb_matrix_set_color(i, RGB_BLUE);
@@ -195,30 +220,29 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
               rgb_matrix_set_color(i, RGB_GREEN);
               break;
             case 5:
-              rgb_matrix_set_color(i, RGB_GREEN);
-              break;
-            default:
               rgb_matrix_set_color(i, RGB_WHITE);
               break;
            }
-        //  } else {
-        //   switch(layer) {
-        //     case 1: 
-        //     case 3: 
-        //     case 4: 
-        //     case 5: 
-        //     case 6: 
-        //     case 7: 
-        //       if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-        //           rgb_matrix_set_color(i, RGB_PURPLE);
-        //       } else {
-        //           rgb_matrix_set_color(i, RGB_OFF);
-        //       }
-        //       break;
-        //     case 2:
-        //     default: // WIN01
-        //       break;
-        //   }
+/*          
+         } else {
+          switch(layer) {
+            case 1: 
+            case 3: 
+            case 4: 
+            case 5: 
+            case 6: 
+            case 7: 
+              if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+                  rgb_matrix_set_color(i, RGB_PURPLE);
+              } else {
+                  rgb_matrix_set_color(i, RGB_OFF);
+              }
+              break;
+            case 2:
+            default: // WIN01
+              break;
+          }
+*/
         } 
       }
     }
