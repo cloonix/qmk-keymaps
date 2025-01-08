@@ -11,7 +11,8 @@ enum layers{
 };
 
 enum td_keycodes {
-  PRINT
+  PRINT,
+  SPACE
 };
 
 typedef enum {
@@ -33,11 +34,11 @@ void print_reset(tap_dance_state_t *state, void *user_data);
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [MAC_BASE] = LAYOUT_iso_83(
 KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
-QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           KC_PGUP,
+QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           TD(PRINT),
 KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
 LCAG_T(KC_CAPS), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
 KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
-KC_LCTL,         KC_LOPTN, KC_LCMMD,                               KC_SPC,                                 KC_RCMMD, MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
+KC_LCTL,         KC_LOPTN, KC_LCMD,                                TD(SPACE),                              KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
 ),
 
 [MAC_FN] = LAYOUT_iso_83(
@@ -109,19 +110,20 @@ td_state_t cur_dance(tap_dance_state_t *state) {
     else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
 }
 
-// Handle the possible states for each tapdance keycode you define:
+// Tap dances
+// Print Screen
+
 
 void print_finished(tap_dance_state_t *state, void *user_data) {
     td_state = cur_dance(state);
     switch (td_state) {
         case TD_SINGLE_TAP:
+            register_code16(KC_PGUP);
+            break;
+        case TD_DOUBLE_TAP:
             register_code16(KC_PSCR);
             break;
-        case TD_SINGLE_HOLD:
-            register_mods(MOD_BIT(KC_LALT));
-            register_code16(KC_PSCR);
-            break;
-        case TD_DOUBLE_TAP: 
+        case TD_SINGLE_HOLD: 
             register_mods(MOD_BIT(KC_LCTL));
             register_code16(KC_PSCR);
             break;
@@ -133,13 +135,12 @@ void print_finished(tap_dance_state_t *state, void *user_data) {
 void print_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
+            unregister_code16(KC_PGUP);
+            break;
+        case TD_DOUBLE_TAP:
             unregister_code16(KC_PSCR);
             break;
         case TD_SINGLE_HOLD:
-            unregister_mods(MOD_BIT(KC_LALT)); 
-            unregister_code16(KC_PSCR);
-            break;
-        case TD_DOUBLE_TAP:
             unregister_mods(MOD_BIT(KC_LCTL));
             unregister_code16(KC_PSCR);
             break;
@@ -148,9 +149,39 @@ void print_reset(tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void space_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            register_code16(KC_SPC);
+            break;
+        case TD_SINGLE_HOLD: 
+            register_mods(MOD_BIT(KC_LCMD));
+            register_code16(KC_SPC);
+            break;
+        default:
+            break;
+    }
+}
+
+void space_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            unregister_code16(KC_SPC);
+            break;
+        case TD_SINGLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LCMD));
+            unregister_code16(KC_SPC);
+            break;
+        default:
+            break;
+    }
+}
+
 // Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
 tap_dance_action_t tap_dance_actions[] = {
-    [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset)
+    [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset),
+    [SPACE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, space_finished, space_reset)
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -177,6 +208,18 @@ void leader_end_user(void) {
   
   if (leader_sequence_one_key(KC_2)) {
     layer_move(WIN_BASE);
+    did_leader_succeed = true;
+  }
+
+  if (leader_sequence_one_key(KC_PGUP)) {
+    tap_code(KC_PSCR);
+    did_leader_succeed = true;
+  }
+
+  if (leader_sequence_two_keys(KC_PGUP, KC_PGUP)) {
+    register_mods(MOD_BIT(KC_LCTL));
+    tap_code(KC_PSCR);
+    unregister_mods(MOD_BIT(KC_LCTL));
     did_leader_succeed = true;
   }
   
