@@ -6,7 +6,8 @@ enum layers{
   WIN_BASE, // 2 - DIP switch up
   WIN_FN, // 3
   MAC_FN2, // 4
-  WIN_FN2 // 5
+  WIN_FN2, // 5
+  GAME // 6
 };
 
 enum td_keycodes {
