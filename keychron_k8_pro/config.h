@@ -1,7 +1,10 @@
-// #define TAPPING_TERM 200
-// #define ONESHOT_TIMEOUT 2500
+// #define TAPPING_FORCE_HOLD
+// #define PERMISSIVE_HOLD
+#define HOLD_ON_OTHER_KEY_PRESS
+#define TAPPING_TERM 200
+#define ONESHOT_TIMEOUT 1000
 // #define LEADER_NO_TIMEOUT
-// #define LEADER_TIMEOUT 250
+#define LEADER_TIMEOUT 200
 // #define LEADER_PER_KEY_TIMING
 
 // disable all RGB effects (except solid color)
