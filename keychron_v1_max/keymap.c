@@ -12,7 +12,9 @@ enum layers{
 
 enum td_keycodes {
   PRINT,
-  SPACE
+  SPACE,
+  FN_KEY,
+  CAPS_KEY
 };
 
 typedef enum {
@@ -30,19 +32,25 @@ td_state_t cur_dance(tap_dance_state_t *state);
 // `finished` and `reset` functions for each tapdance keycode
 void print_finished(tap_dance_state_t *state, void *user_data);
 void print_reset(tap_dance_state_t *state, void *user_data);
+void space_finished(tap_dance_state_t *state, void *user_data);
+void space_reset(tap_dance_state_t *state, void *user_data);
+void caps_finished(tap_dance_state_t *state, void *user_data);
+void caps_reset(tap_dance_state_t *state, void *user_data);
+void fn_finished(tap_dance_state_t *state, void *user_data);
+void fn_reset(tap_dance_state_t *state, void *user_data);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [MAC_BASE] = LAYOUT_iso_83(
-KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
+KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,     KC_F10,   KC_F11,     KC_F12,   KC_DEL,            KC_MUTE,
 QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,           TD(PRINT),
 KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
-LCAG_T(KC_CAPS), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
+TD(CAPS_KEY),    KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
 KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
 KC_LCTL,         KC_LOPTN, KC_LCMD,                                TD(SPACE),                              KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
 ),
 
 [MAC_FN] = LAYOUT_iso_83(
-_______,  KC_BRID,  KC_BRIU,  KC_MCTRL, KC_LNPAD, RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
+_______,  KC_BRID,  KC_BRIU,  KC_MCTL,  KC_LPAD,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  _______,            RGB_TOG,
 _______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  QK_BOOT,            _______,
 RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,                      _______,
 _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
@@ -51,12 +59,12 @@ _______,  _______,  _______,                                _______,            
 ),
 
 [WIN_BASE] = LAYOUT_iso_83(
-KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,    KC_F12,   KC_DEL,             KC_MUTE,
-QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_EQL,   KC_BSPC,            KC_PGUP,
+KC_ESC,          KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,     KC_F10,   KC_F11,    KC_F12,   KC_DEL,             KC_MUTE,
+QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_EQL,   KC_BSPC,            TD(PRINT),
 KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,                      KC_PGDN,
 LCAG_T(KC_CAPS), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_NUHS,  KC_ENT,             KC_HOME,
 KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,             KC_RSFT,  KC_UP,
-KC_LCTL,         KC_LGUI,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(WIN_FN), KC_RCTL, KC_LEFT,  KC_DOWN,  KC_RGHT
+KC_LCTL,         KC_LGUI,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(WIN_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT
 ),
 
 [WIN_FN] = LAYOUT_iso_83(
@@ -178,10 +186,72 @@ void space_reset(tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void caps_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            // On tap: Enable one-shot modifiers CMD+Option+Shift
+            set_oneshot_mods(MOD_BIT(KC_LCMD) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LSFT));
+            break;
+        case TD_SINGLE_HOLD:
+            // On hold: Enable Ctrl+Option+CMD
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LCMD));
+            break;
+        default:
+            break;
+    }
+}
+
+void caps_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            // One-shot modifiers clear themselves after next key press
+            break;
+        case TD_SINGLE_HOLD:
+            // Release the held modifiers
+            unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LCMD));
+            break;
+        default:
+            break;
+    }
+}
+
+void fn_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            // On tap: Enable one-shot modifiers CMD+Option+Shift
+            set_oneshot_mods(MOD_BIT(KC_LCMD) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LSFT));
+            break;
+        case TD_SINGLE_HOLD:
+            // On hold: Switch to MAC_FN layer
+            layer_move(MAC_FN);
+            break;
+        default:
+            break;
+    }
+}
+
+void fn_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            // One-shot modifiers clear themselves after next key press
+            break;
+        case TD_SINGLE_HOLD:
+            // Move back to the original layer (MAC_BASE)
+            layer_move(MAC_BASE);
+            break;
+        default:
+            break;
+    }
+}
+
 // Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
 tap_dance_action_t tap_dance_actions[] = {
     [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset),
-    [SPACE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, space_finished, space_reset)
+    [SPACE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, space_finished, space_reset),
+    [CAPS_KEY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, caps_finished, caps_reset),
+    [FN_KEY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, fn_finished, fn_reset)
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -240,7 +310,8 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         if (i == 0) {
           switch (layer) {
             case 0:
-              rgb_matrix_set_color(i, RGB_WHITE);
+            default:
+              rgb_matrix_set_color(i, RGB_GREEN);
               break;
             case 1:
               rgb_matrix_set_color(i, RGB_BLUE);
@@ -255,31 +326,28 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
               rgb_matrix_set_color(i, RGB_GREEN);
               break;
             case 5:
-              rgb_matrix_set_color(i, RGB_GREEN);
-              break;
-            default:
               rgb_matrix_set_color(i, RGB_WHITE);
               break;
            }
-        //  } else {
-        //   switch(layer) {
-        //     case 1: 
-        //     case 3: 
-        //     case 4: 
-        //     case 5: 
-        //     case 6: 
-        //     case 7: 
-        //       if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-        //           rgb_matrix_set_color(i, RGB_PURPLE);
-        //       } else {
-        //           rgb_matrix_set_color(i, RGB_OFF);
-        //       }
-        //       break;
-        //     case 2:
-        //     default: // WIN01
-        //       break;
-        //   }
-        } 
+/*
+         } else {
+          switch(layer) {
+            case 1:
+            case 3:
+            case 4:
+            case 5:
+              if (keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+                  rgb_matrix_set_color(i, RGB_PURPLE);
+              } else {
+                  rgb_matrix_set_color(i, RGB_OFF);
+              }
+              break;
+            case 2:
+            default: // WIN01
+              break;
+          }
+*/
+        }
       }
     }
   }
