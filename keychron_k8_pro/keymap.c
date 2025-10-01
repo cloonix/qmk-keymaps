@@ -149,7 +149,7 @@ void caps_finished(tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
             // On tap: Enable one-shot modifiers CMD+Option+Shift
-            set_oneshot_mods(MOD_BIT(KC_LCMD) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LSFT));
+            set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LCMD) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LSFT));
             break;
         case TD_SINGLE_HOLD:
             // On hold: Enable Ctrl+Option+CMD
