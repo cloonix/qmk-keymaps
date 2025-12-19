@@ -12,7 +12,6 @@ enum layers{
 
 enum td_keycodes {
   PRINT,
-  SPACE,
   FN_KEY,
   CAPS_KEY
 };
@@ -32,8 +31,6 @@ td_state_t cur_dance(tap_dance_state_t *state);
 // `finished` and `reset` functions for each tapdance keycode
 void print_finished(tap_dance_state_t *state, void *user_data);
 void print_reset(tap_dance_state_t *state, void *user_data);
-void space_finished(tap_dance_state_t *state, void *user_data);
-void space_reset(tap_dance_state_t *state, void *user_data);
 void caps_finished(tap_dance_state_t *state, void *user_data);
 void caps_reset(tap_dance_state_t *state, void *user_data);
 void fn_finished(tap_dance_state_t *state, void *user_data);
@@ -46,7 +43,7 @@ QK_LEAD,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_
 KC_TAB,          KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                     KC_PGDN,
 TD(CAPS_KEY),    KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,            KC_HOME,
 KC_LSFT,         KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
-KC_LCTL,         KC_LOPTN, KC_LCMD,                                TD(SPACE),                              KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
+KC_LCTL,         KC_LOPTN, KC_LCMD,                                KC_SPC,                              KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN, KC_RGHT
 ),
 
 [MAC_FN] = LAYOUT_iso_83(
@@ -157,41 +154,12 @@ void print_reset(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void space_finished(tap_dance_state_t *state, void *user_data) {
-    td_state = cur_dance(state);
-    switch (td_state) {
-        case TD_SINGLE_TAP:
-            register_code16(KC_SPC);
-            break;
-        case TD_SINGLE_HOLD: 
-            register_mods(MOD_BIT(KC_LCMD));
-            register_code16(KC_SPC);
-            break;
-        default:
-            break;
-    }
-}
-
-void space_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_state) {
-        case TD_SINGLE_TAP:
-            unregister_code16(KC_SPC);
-            break;
-        case TD_SINGLE_HOLD:
-            unregister_mods(MOD_BIT(KC_LCMD));
-            unregister_code16(KC_SPC);
-            break;
-        default:
-            break;
-    }
-}
-
 void caps_finished(tap_dance_state_t *state, void *user_data) {
     td_state = cur_dance(state);
     switch (td_state) {
         case TD_SINGLE_TAP:
-            // On tap: Enable one-shot modifiers CMD+Option+Shift
-            set_oneshot_mods(MOD_BIT(KC_LCMD) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LSFT));
+            // On tap: Enable one-shot modifiers LCtrl+CMD+Option+Shift
+            set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LCMD) | MOD_BIT(KC_LOPT) | MOD_BIT(KC_LSFT));
             break;
         case TD_SINGLE_HOLD:
             // On hold: Enable Ctrl+Option+CMD
@@ -249,7 +217,6 @@ void fn_reset(tap_dance_state_t *state, void *user_data) {
 // Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
 tap_dance_action_t tap_dance_actions[] = {
     [PRINT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, print_finished, print_reset),
-    [SPACE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, space_finished, space_reset),
     [CAPS_KEY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, caps_finished, caps_reset),
     [FN_KEY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, fn_finished, fn_reset)
 };
